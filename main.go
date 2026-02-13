@@ -1,12 +1,15 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"os/exec"
-	"os"
-	"io"
+
 	"github.com/common-nighthawk/go-figure"
 )
+
+//go:embed init.txt
+var prompt string
 
 func main() {
 
@@ -24,17 +27,17 @@ func main() {
 
 	if err != nil {
 		fmt.Println("Error starting Codex CLI.", err)
-		fmt.Println("Please install with 'npm install -g @openai/codex'", err)
+		fmt.Println("Please install with 'npm install -g @openai/codex'")
 		return
 	}
 	fmt.Println(string(out))
 
-	fileContent, err := os.ReadFile("init.txt")
-	if err != nil{
-		fmt.Println("Unable to reach init file.", err)
+	// Use embedded prompt instead of reading file
+	out, err = exec.Command("codex", "exec", "--skip-git-repo-check", prompt).Output()
+	if err != nil {
+		fmt.Println("Scan failed:", err)
 		return
 	}
-	prompt := string(fileContent)
-	out, err = exec.Command("codex", "exec", "--skip-git-repo-check", prompt).Output()
+
 	fmt.Println(string(out))
 }
