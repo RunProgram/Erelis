@@ -31,3 +31,6 @@ It combines:
 
 ```bash
 sudo apt install golang-go
+git clone https://github.com/YOUR_USERNAME/erelis.git
+cd erelis
+go install
